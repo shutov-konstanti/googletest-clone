@@ -33,13 +33,15 @@
 
 #include "sample2.h"
 
+#include <string.h>
+
 // Clones a 0-terminated C string, allocating memory using new.
 const char * MyString::CloneCString(const char * c_string) {
   if (c_string == NULL) return NULL;
 
   const size_t len = strlen(c_string);
   char * const clone = new char[ len + 1 ];
-  strcpy(clone, c_string);
+  memcpy(clone, c_string, len + 1);
 
   return clone;
 }
