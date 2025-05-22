@@ -42,7 +42,6 @@ __author__ = 'wan@google.com (Zhanyong Wan)'
 
 import gtest_test_utils
 import os
-import signal
 import sys
 import unittest
 
@@ -55,12 +54,16 @@ BREAK_ON_FAILURE_ENV_VAR = 'GTEST_BREAK_ON_FAILURE'
 # The command line flag for enabling/disabling the break-on-failure mode.
 BREAK_ON_FAILURE_FLAG = 'gtest_break_on_failure'
 
+# The environment variable for enabling/disabling the throw-on-failure mode.
+THROW_ON_FAILURE_ENV_VAR = 'GTEST_THROW_ON_FAILURE'
+
 # Path to the gtest_break_on_failure_unittest_ program.
 EXE_PATH = os.path.join(gtest_test_utils.GetBuildDir(),
-                        'gtest_break_on_failure_unittest_');
+                        'gtest_break_on_failure_unittest_')
 
 
 # Utilities.
+
 
 def SetEnvVar(env_var, value):
   """Sets an environment variable to a given value; unsets it when the
@@ -74,8 +77,7 @@ def SetEnvVar(env_var, value):
 
 
 def Run(command):
-  """Runs a command; returns 1 if it was killed by a signal, or 0 otherwise.
-  """
+  """Runs a command; returns 1 if it was killed by a signal, or 0 otherwise."""
 
   p = gtest_test_utils.Subprocess(command)
   if p.terminated_by_signal:
@@ -84,7 +86,8 @@ def Run(command):
     return 0
 
 
-# The unit test.
+# The tests.
+
 
 class GTestBreakOnFailureUnitTest(unittest.TestCase):
   """Tests using the GTEST_BREAK_ON_FAILURE environment variable or
@@ -180,6 +183,16 @@ class GTestBreakOnFailureUnitTest(unittest.TestCase):
                       flag_value='1',
                       expect_seg_fault=1)
 
+  def testBreakOnFailureOverridesThrowOnFailure(self):
+    """Tests that gtest_break_on_failure overrides gtest_throw_on_failure."""
+
+    SetEnvVar(THROW_ON_FAILURE_ENV_VAR, '1')
+    try:
+      self.RunAndVerify(env_var_value=None,
+                        flag_value='1',
+                        expect_seg_fault=1)
+    finally:
+      SetEnvVar(THROW_ON_FAILURE_ENV_VAR, None)
 
 if __name__ == '__main__':
   gtest_test_utils.Main()

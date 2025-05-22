@@ -54,7 +54,6 @@ TEST(Foo, Bar) {
 
 }  // namespace
 
-
 int main(int argc, char **argv) {
 #if GTEST_OS_WINDOWS
   // Suppresses display of the Windows error dialog upon encountering
