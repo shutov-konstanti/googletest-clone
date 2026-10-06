@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# read more at:
+# http://stackoverflow.com/questions/465042/is-it-possible-to-have-a-subversion-repository-as-a-git-submodule
+#
+# How to create a svn repo clone, push it somwhere
+# 1. Checkout svn to git:
+# >git svn clone -s http://subversion.example.com/ myclone
+# >cd myclone
+# >git remote add origin git@example.com:project.git
+# >git push origin master
+#
+# 2. Add git repo as a submodule
+# >cd /path/to/gitproject
+# >git submodule add git://example.com/project.git -- svn-project
+# >git add svn-project
+# >git commit -m"Add submodule"
+#
+
+#
+# Updating git repository
+#
+git svn rebase
+git push
+
+
